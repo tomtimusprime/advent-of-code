@@ -1,0 +1,39 @@
+use std::env;
+use std::fs::File;
+use std::io::{BufRead, self};
+use std::path::Path;
+fn main() {
+    println!("Current directory: {}", env::current_dir().unwrap().display());
+    let file_contents = read_file("./src/text.txt");
+    println!("{:?}", file_contents);
+    // match read_file("./src/text.txt") {
+    //     Ok(file_content) => println!("{}", file_content),
+    //     Err(error) => print!("unable to read the file. {}", error),
+    // }
+}
+
+fn read_file(file_path: &str) -> Result<u32, std::io::Error>{
+    let path = Path::new(file_path);
+    let file = File::open(&path)?;
+    let reader = io::BufReader::new(file);
+
+    let mut contents = String::new();
+    let mut sum = 0;
+    for line in reader.lines() {
+        let line = line?;
+        let first_digit = line.chars().find(|c| c.is_digit(10)).map(|c| c.to_digit(10).unwrap());
+        let last_digit = line.chars().rev().find(|c| c.is_digit(10)).map(|c| c.to_digit(10).unwrap());
+
+        if let (Some(first), Some(last)) = (first_digit, last_digit) {
+            let combined = first + last;
+            sum += combined;
+        }
+        contents.push_str(&line);
+        contents.push('\n');
+    }
+    contents.pop();
+    Ok(sum)
+}
+
+
+ 
