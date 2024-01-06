@@ -11,9 +11,7 @@ fn main() {
 }
 
 fn process(input: &str) -> u32 {
-    let output = input
-    .lines()
-    .map(process_line).sum::<u32>();
+    let output = input.lines().map(process_line).sum::<u32>();
 
     dbg!(&output);
     output
@@ -50,25 +48,23 @@ fn process_line(line: &str) -> u32 {
         } else if reduced_line.starts_with("nine") {
             index += "nine".len();
             Some('9')
-        } else  {
+        } else {
             let result = reduced_line.chars().next();
             index += 1;
             result
         };
         result
     });
-        dbg!(&line_iter);
-        let mut it = line_iter.filter_map(|character| {
-            character.to_digit(10)
-        });
-        let first = it.next().expect("Should be a number");
+    dbg!(&line_iter);
+    let mut it = line_iter.filter_map(|character| character.to_digit(10));
+    let first = it.next().expect("Should be a number");
 
-        match it.last() {
-            Some(num) => format!("{first}{num}"),
-            None => format!("{first}{first}"),
-        }
-        .parse::<u32>()
-        .expect("Should be a valid number")
+    match it.last() {
+        Some(num) => format!("{first}{num}"),
+        None => format!("{first}{first}"),
+    }
+    .parse::<u32>()
+    .expect("Should be a valid number")
 }
 
 #[cfg(test)]
