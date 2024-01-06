@@ -1,4 +1,4 @@
-use std::num::ParseIntError;
+use std::{num::ParseIntError, process::Output};
 fn main() {
     let input = include_str!("./text.txt");
     process(input);
@@ -8,12 +8,11 @@ fn process(input: &str) -> u32 {
     let output = input
     .lines()
     .map(|line| {
-        let mut it = line.chars().filter_map(|character| {
+        let mut iterator = line.chars().filter_map(|character| {
             character.to_digit(10)
         });
-        let first = it.next().expect("Should be a number");
-        let last = it.last();
-
+        let first = iterator.next().expect("Should be a number");
+        let last = iterator.last();
         match last {
             Some(num) => format!("{first}{num}").parse::<u32>(),
             None => format!("{first}{first}").parse::<u32>(),
@@ -21,13 +20,37 @@ fn process(input: &str) -> u32 {
     })
     .fold(0, |accumulator, result| match result {
         Ok(num) => accumulator + num,
-        Err(_) => accumulator, // or handle the error as needed
+        Err(_) => accumulator,
     });
 
     dbg!(output);
     output
 }
-//The following is really handy to use on iterators to see what's coming back on them.
+
+// fn process(input: &str) -> u32 {
+//     let output = input
+//     .lines()
+//     .map(|line| {
+//         let mut it = line.chars().filter_map(|character| {
+//             character.to_digit(10)
+//         });
+//         let first = it.next().expect("Should be a number");
+//         let last = it.last();
+
+//         match last {
+//             Some(num) => format!("{first}{num}").parse::<u32>(),
+//             None => format!("{first}{first}").parse::<u32>(),
+//         }
+//     })
+//     .fold(0, |accumulator, result| match result {
+//         Ok(num) => accumulator + num,
+//         Err(_) => accumulator, // or handle the error as needed
+//     });
+
+//     dbg!(output);
+//     output
+// }
+// The following is really handy to use on iterators to see what's coming back on them.
 // .inspect(|line| {
 //     dbg!(line);
 // }).
